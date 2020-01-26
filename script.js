@@ -1,15 +1,18 @@
 let url = window.location.toString();
+console.log(url);
+
 
 let getUsername = (url) => {
     let urlArray = url.split('=');
     let userName = urlArray[1];
-    if (userName === undefined){
+    if (isNaN(userName)){
         userName = 'Natalina27';
     }
-    return userName
+    return userName;
 };
 
 let name = getUsername(url);
+console.log(name);
 
 fetch('https://api.github.com/users/' + name)
     .then(res => res.json())
@@ -52,4 +55,4 @@ fetch('https://api.github.com/users/' + name)
         }
     })
 
-    .catch(err => alert(err + ' :( Profile not found'));
+    .catch(err => console.log(err + ' :( Profile not found'));
