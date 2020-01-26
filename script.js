@@ -51,7 +51,12 @@ fetch('https://api.github.com/users/' + name)
             createAvatar();
         }
         else {
-            console.log(' :(  Profile not found ')
+            let errorMessage = () => {
+                let elementForError = document.createElement('h1');
+                elementForError.innerHTML = ' Информация о пользователе не доступна. ';
+                document.body.appendChild(elementForError);
+            };
+                errorMessage();
         }
     })
 
