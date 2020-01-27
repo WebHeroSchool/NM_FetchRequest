@@ -15,19 +15,23 @@ let name = getUsername(url);
 console.log(name);
 
 let getNowDate = new Promise((resolve, reject) => {
-    let nowDate = new Date();
-    setTimeout(() => nowDate ? resolve(nowDate) : reject ('Ошибка вычисления времени'), 3000)
+     let nowDate = new Date();
+    setTimeout(() => nowDate ?
+        resolve(nowDate) :
+        reject ('Ошибка вычисления времени'), 3000)
 });
+console.log(getNowDate);
 
 let getUserData = fetch('https://api.github.com/users/' + name);
+console.log(getUserData);
 
 Promise.all([getUserData, getNowDate])
-    .then(([ourUserData, ourNowDate]) => {
-        userData = ourUserData;
-        currentDate = ourNowDate;
-    })
-    .then(userData => userData.json())
-    .then(userInfo => {
+       .then(([ourUserData, ourNowDate]) => {
+         userData = ourUserData;
+         currentDate = ourNowDate;
+        })
+       .then(() => userData.json())
+       .then(userInfo => {
         let avatar = userInfo.avatar_url;
         let name = userInfo.login;
         let bio = userInfo.bio;
@@ -56,6 +60,7 @@ Promise.all([getUserData, getNowDate])
                 document.body.appendChild(elementForLink);
                 elementForLink.appendChild(elementForHeader);
             };
+
             let createDate = () => {
                 let newCurrentDate = document.createElement('p');
                 newCurrentDate.innerHTML = currentDate;
@@ -79,5 +84,5 @@ Promise.all([getUserData, getNowDate])
                 errorMessage();
         }
     })
+       .catch(err => console.log(err + ' :( Profile not found'));
 
-    .catch(err => console.log(err + ' :( Profile not found'));
