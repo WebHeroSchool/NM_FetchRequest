@@ -6,7 +6,7 @@ let getUsername = (url) => {
     let urlArray = url.split('=');
     let userName = urlArray[1];
     if (isNaN(userName)){
-        userName = 'Natalina27';
+        userName = '';
     }
     return userName;
 };
@@ -81,6 +81,10 @@ Promise.all([getUserData, getNowDate])
                 elementForError.innerHTML = ' Информация о пользователе не доступна. ';
                 document.body.appendChild(elementForError);
             };
+
+            let elementForPreloader = document.getElementById('preload');
+            elementForPreloader.classList.add('hidden');
+
                 errorMessage();
         }
     })
