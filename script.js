@@ -14,13 +14,28 @@ let getUsername = (url) => {
 let name = getUsername(url);
 console.log(name);
 
-fetch('https://api.github.com/users/' + name)
-    .then(res => res.json())
-    .then(json => {
-        let avatar = json.avatar_url;
-        let name = json.login;
-        let bio = json.bio;
-        let profile =json.html_url;
+let getNowDate = new Promise((resolve, reject) => {
+     let nowDate = new Date();
+    setTimeout(() => nowDate ?
+        resolve(nowDate) :
+        reject ('Ошибка вычисления времени'), 3000)
+});
+console.log(getNowDate);
+
+let getUserData = fetch('https://api.github.com/users/' + name);
+console.log(getUserData);
+
+Promise.all([getUserData, getNowDate])
+       .then(([ourUserData, ourNowDate]) => {
+         userData = ourUserData;
+         currentDate = ourNowDate;
+        })
+       .then(() => userData.json())
+       .then(userInfo => {
+        let avatar = userInfo.avatar_url;
+        let name = userInfo.login;
+        let bio = userInfo.bio;
+        let profile =userInfo.html_url;
         if (name) {
 
             let createAvatar = () => {
@@ -46,9 +61,19 @@ fetch('https://api.github.com/users/' + name)
                 elementForLink.appendChild(elementForHeader);
             };
 
+            let createDate = () => {
+                let newCurrentDate = document.createElement('p');
+                newCurrentDate.innerHTML = currentDate;
+                document.body.appendChild(newCurrentDate);
+            };
+
+            let elementForPreloader = document.getElementById('preload');
+            elementForPreloader.classList.add('hidden');
+
             createProfile();
             createBio();
             createAvatar();
+            createDate();
         }
         else {
             let errorMessage = () => {
@@ -56,8 +81,12 @@ fetch('https://api.github.com/users/' + name)
                 elementForError.innerHTML = ' Информация о пользователе не доступна. ';
                 document.body.appendChild(elementForError);
             };
+
+            let elementForPreloader = document.getElementById('preload');
+            elementForPreloader.classList.add('hidden');
+
                 errorMessage();
         }
     })
+       .catch(err => console.log(err + ' :( Profile not found'));
 
-    .catch(err => console.log(err + ' :( Profile not found'));
